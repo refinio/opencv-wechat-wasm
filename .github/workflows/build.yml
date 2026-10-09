@@ -1,0 +1,42 @@
+name: Build WASM package
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          run-install: true
+      - uses: actions/cache@v4
+        with:
+          path: generated
+          key: opencv-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/build-runtime.sh', 'scripts/fetch-models.sh', 'scripts/verify-opencv-wasm.mjs', 'config/**', 'patches/**') }}
+      - run: vp run build
+      - run: vp run test
+      - run: vp pm pack
+      - name: Verify packed package
+        run: |
+          mkdir /tmp/opencv-package
+          tar -xzf ./*.tgz -C /tmp/opencv-package
+          node --experimental-vm-modules scripts/smoke-runtime.mjs /tmp/opencv-package/package/src/index.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: '*.tgz'
+      - name: Publish release tarball
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" || gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes
+          gh release upload "$GITHUB_REF_NAME" ./*.tgz --clobber

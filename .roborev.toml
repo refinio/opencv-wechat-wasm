@@ -1,0 +1,3 @@
+review_guidelines = """
+Experimental extracted package with no compatibility guarantee. Keep only the compiler recipe, reduced native bindings, binary/model assets, runtime loader, and low-level types here. QR preprocessing and morphology sweep policy remain in refinio/lft. Consumers must install precompiled assets without invoking Docker. The runtime is browser/window/module-worker only, not Node.
+"""

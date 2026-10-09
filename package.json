@@ -1,0 +1,37 @@
+{
+  "name": "@refinio/opencv-wechat-wasm",
+  "version": "0.1.0",
+  "description": "Minimal OpenCV 4.13 SIMD WebAssembly runtime with WeChat QR detector models",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/refinio/opencv-wechat-wasm.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./assets/*": "./generated/*"
+  },
+  "files": [
+    "src",
+    "generated/opencv",
+    "generated/wechat_qrcode",
+    "LICENSE",
+    "LICENSES"
+  ],
+  "scripts": {
+    "build": "bash scripts/build-runtime.sh",
+    "test": "node --experimental-vm-modules scripts/smoke-runtime.mjs",
+    "prepack": "node --experimental-vm-modules scripts/smoke-runtime.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "publishConfig": {
+    "access": "public"
+  }
+}
