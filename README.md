@@ -27,6 +27,6 @@ Install Vite+ for package-manager commands. Run `vp install`, `vp run build`, `v
 
 The whitelist exposes core matrices and containers, selected imgproc operations, and WeChatQRCode. Native DNN and objdetect modules are included as build dependencies, along with the transitive calib3d, features2d, and flann modules. These do not gain additional JavaScript bindings beyond the whitelist. The contrib patch skips filesystem existence checks when native filesystem support is disabled, so models can load from Emscripten MEMFS. WASM uses SIMD and O3 without pthreads. Supported runtimes are modern browsers and module workers, not Node.
 
-GitHub Actions builds and checks the package and uploads a tarball. Version tags also publish that tarball to a GitHub Release. npm publication can use the same tarball; no install or postinstall build runs in consuming projects.
+GitHub Actions builds and checks the package and uploads a tarball. Version tags also publish that tarball to a GitHub Release. Release assets are immutable: reruns fill missing assets without replacing existing tarballs, preserving consumer lockfile integrity. npm publication can use the same tarball; no install or postinstall build runs in consuming projects.
 
 Wrapper code is MIT licensed. OpenCV, models, and linked third-party notices are in `LICENSES/`.

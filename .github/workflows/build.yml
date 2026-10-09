@@ -39,4 +39,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release view "$GITHUB_REF_NAME" || gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes
-          gh release upload "$GITHUB_REF_NAME" ./*.tgz --clobber
+          for package_file in ./*.tgz; do
+            package_name="$(basename "$package_file")"
+            exists="$(gh release view "$GITHUB_REF_NAME" --json assets | jq --arg name "$package_name" 'any(.assets[]; .name == $name)')"
+            if [ "$exists" = false ]; then
+              gh release upload "$GITHUB_REF_NAME" "$package_file"
+            fi
+          done
