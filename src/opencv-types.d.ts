@@ -19,7 +19,10 @@ export interface OpenCv {
   INTER_CUBIC: number;
   MORPH_OPEN: number;
   MORPH_RECT: number;
-  Mat: new (rows: number, cols: number, type: number) => CvMat;
+  Mat: {
+    new (): CvMat;
+    new (rows: number, cols: number, type: number): CvMat;
+  };
   MatVector: new () => CvMatVector;
   Size: new (width: number, height: number) => CvSize;
   cvtColor: (src: CvMat, dst: CvMat, code: number) => void;
